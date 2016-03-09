@@ -1,11 +1,11 @@
 function onOpen() {
   var menuItems = [
-    {name: 'Add a month', functionName: 'showPrompt'}
+    {name: 'Add a month', functionName: 'showPrompt_'}
   ];
   SpreadsheetApp.getActiveSpreadsheet().addMenu('ToolBox', menuItems);
 }
 
-function showPrompt() {
+function showPrompt_() {
   var ui = SpreadsheetApp.getUi()
   var result = ui.prompt(
     'What\'s the new month?',
@@ -15,7 +15,7 @@ function showPrompt() {
   var text = result.getResponseText();
   
   if (button == ui.Button.OK) {
-    createNewMonth(text);
+    createNewMonth_(text);
   } else if (button == ui.Button.CANCEL) {
     ui.alert('I didn\'t get a month');
   } else if (button == ui.Button.CLOSE) {
@@ -23,23 +23,23 @@ function showPrompt() {
   }
 }
 
-function createNewMonth(text) {
+function createNewMonth_(text) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
   ss.setActiveSheet(ss.getSheetByName("Template")); 
   
   if (ss != null) {
     var newsheet = ss.duplicateActiveSheet();
+
     newsheet.setName(text);
     ss.setActiveSheet(newsheet);
     ss.moveActiveSheet(2);
  } 
   
-  updateBudgetRollUp(text);
+  updateBudgetRollUp_(text);
 }
 
-function updateBudgetRollUp(text) {
-  var text = '4/2016';  
+function updateBudgetRollUp_(text) {
   var rollUpSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Budget Rollup");
   
   rollUpSheet.insertColumnsAfter(2, 2);
@@ -56,7 +56,6 @@ function updateBudgetRollUp(text) {
     var val = values[row][0];
     
     if(val) {
-      Logger.log(row+2);
       values[row][0] = "'" + text + "'" + "!" + "H" + (parseInt(row)+2);      
     }
   }
